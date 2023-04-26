@@ -20,6 +20,7 @@ export interface Env {
 	//
 	// Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
 	// MY_SERVICE: Fetcher;
+	TODO_WRANGLER: KVNamespace;
 }
 
 export default {
@@ -28,6 +29,11 @@ export default {
 		env: Env,
 		ctx: ExecutionContext
 	): Promise<Response> {
-		return new Response("Hello World!");
+    const value = await env.TODO_WRANGLER.get("test");
+
+    if (value === null) {
+      return new Response("Value not found",  { status:  404})
+    }
+    return new Response(value);
 	},
 };
